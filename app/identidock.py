@@ -1,5 +1,6 @@
 from __future__ import print_function
 import hashlib
+import html
 import redis
 import requests
 
@@ -18,6 +19,7 @@ def mainpage():
 
     if request.method == 'POST':
         name = request.form['name']
+        name = html.escape(name, quote=True)
 
     salted_name = salt + name
     name_hash = hashlib.sha256(salted_name.encode()).hexdigest()
