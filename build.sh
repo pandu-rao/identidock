@@ -17,7 +17,7 @@ ERR=$?
 # Run system test if unit tests passed
 if [ $ERR -eq 0 ]; then
   IP=$(sudo docker inspect -f {{.NetworkSettings.IPAddress}} \
-          jenkins_identidock_1)
+          identidock_identidock_1)
   CODE=$(curl -sL -w "%{http_code}" $IP:9090/monster/bla -o /dev/null) || true
   if [ $CODE -ne 200 ]; then
     echo "Site returned " $CODE
@@ -29,4 +29,4 @@ fi
 sudo docker-compose $COMPOSE_ARGS stop
 sudo docker-compose $COMPOSE_ARGS rm --force -v
 
-return $ERR
+echo $ERR
