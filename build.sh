@@ -1,4 +1,8 @@
 #!/bin/bash
+
+DOCKER_REGISTRY_USERNAME="$1"
+DOCKER_REGISTRY_PASSWORD="$2"
+
 # Default compose args
 COMPOSE_ARGS=" -f build.yml -p identidock "
 
@@ -22,6 +26,15 @@ if [ $ERR -eq 0 ]; then
   if [ $CODE -ne 200 ]; then
     echo "Site returned " $CODE
     ERR=1
+  else
+    echo 'Test passed - Tagging'
+    HASH=$(git rev-parse --short HEAD)
+    sudo docker tag -f buildbot_identidock pandurao/identidock:$HASH
+    sudo docker tag -f buildbot_identidock pandurao/identidock:newest
+    echo 'Pushing'
+    sudo docker login -u "$DOCKER_REGISTRY_USERNAME" -p "$DOCKER_REGISTRY_PASSWORD"
+    sudo docker push pandurao/identidock:$HASH
+    sudo docker push pandurao/identidock:newest
   fi
 fi
 
